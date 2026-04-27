@@ -1,34 +1,45 @@
-/*Problem: Write a recursive function fib(n) to compute the n-th Fibonacci number where fib(0)=0 and fib(1)=1.
-
-Input:
-- Single integer n
-
-Output:
-- Print the n-th Fibonacci number
-
-Example:
-Input:
-6
-
-Output:
-8
-
-Explanation: Sequence: 0,1,1,2,3,5,8 at positions 0,1,2,3,4,5,6*/
 
 #include <stdio.h>
 
-int fib(int n) {
-    // Base cases
-    if (n == 0)
-        return 0;
-    if (n == 1)
-        return 1;
-    // Recursive case
-    return fib(n - 1) + fib(n - 2);
-}
+#define MAX 1000
+
+// Simple hash map using arrays
+int hash[2001];  // to handle negative sums
+int indexMap[2001];
+
 int main() {
     int n;
     scanf("%d", &n);
-    printf("%d", fib(n));
+
+    int arr[MAX];
+    for (int i = 0; i < n; i++)
+        scanf("%d", &arr[i]);
+
+    // Initialize hash
+    for (int i = 0; i < 2001; i++)
+        hash[i] = -2;  // -2 means not visited
+
+    int sum = 0, maxLen = 0;
+
+    for (int i = 0; i < n; i++) {
+        sum += arr[i];
+
+        if (sum == 0) {
+            maxLen = i + 1;
+        }
+
+        int key = sum + 1000; // shift to handle negative
+
+        if (hash[key] == -2) {
+            hash[key] = i;  // store first occurrence
+        } else {
+            int len = i - hash[key];
+            if (len > maxLen)
+                maxLen = len;
+        }
+    }
+
+    printf("%d\n", maxLen);
+
     return 0;
-}
+} 
